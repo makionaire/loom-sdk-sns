@@ -7,33 +7,13 @@
     <script src="https://cdn.jsdelivr.net/npm/loom-js@1.15.0/dist/loom.umd.js"></script>
     <script src="js/web3.min.js"></script>
     <script src="js/contract_abi.js"></script>
-
+    <script src="js/loom.js"></script>
 </head>
 
 <body>
 
     <script type="text/javascript">
-        var contract;
-        var from;
-        
-        window.addEventListener(`load`, async function () {
-            const privateKey = loom.CryptoUtils.generatePrivateKey()
-            const publicKey = loom.CryptoUtils.publicKeyFromPrivateKey(privateKey)
-            const client = new loom.Client(
-                'default',
-                'ws://127.0.0.1:46657/websocket',
-                'ws://127.0.0.1:9999/queryws',
-            )
-            
-            from = loom.LocalAddress.fromPublicKey(publicKey).toString()
-            const web3 = new Web3(new loom.LoomProvider(client, privateKey))
-            contract = new web3.eth.Contract(contractABI, "0x60ab575af210cc952999976854e938447e919871", { from })
-
-            contract.events.NewValueSet({}, (err, event) => {
-            })
-
-        });
-        
+      
         async function set() {
             await contract.methods.set(10).send()
         }
