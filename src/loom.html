@@ -1,0 +1,131 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <title>Loom Test</title>
+    <script src="https://cdn.jsdelivr.net/npm/loom-js@1.15.0/dist/loom.umd.js"></script>
+    <script src="js/web3.min.js"></script>
+</head>
+
+<body>
+
+    <script type="text/javascript">
+        var contract;
+        var from;
+        
+        window.addEventListener(`load`, async function () {
+            const privateKey = loom.CryptoUtils.generatePrivateKey()
+            const publicKey = loom.CryptoUtils.publicKeyFromPrivateKey(privateKey)
+            const client = new loom.Client(
+                'default',
+                'ws://127.0.0.1:46657/websocket',
+                'ws://127.0.0.1:9999/queryws',
+            )
+            from = loom.LocalAddress.fromPublicKey(publicKey).toString()
+
+            const web3 = new Web3(new loom.LoomProvider(client, privateKey))
+            
+            contract = new web3.eth.Contract([
+    {
+      "anonymous": false,
+      "inputs": [
+        {
+          "indexed": true,
+          "name": "_value",
+          "type": "uint256"
+        },
+        {
+          "indexed": false,
+          "name": "_sender",
+          "type": "address"
+        }
+      ],
+      "name": "NewValueSet",
+      "type": "event"
+    },
+    {
+      "anonymous": false,
+      "inputs": [
+        {
+          "indexed": true,
+          "name": "_value",
+          "type": "uint256"
+        },
+        {
+          "indexed": false,
+          "name": "_sender",
+          "type": "address"
+        }
+      ],
+      "name": "NewValueSetAgain",
+      "type": "event"
+    },
+    {
+      "constant": false,
+      "inputs": [
+        {
+          "name": "_value",
+          "type": "uint256"
+        }
+      ],
+      "name": "set",
+      "outputs": [],
+      "payable": false,
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "constant": false,
+      "inputs": [
+        {
+          "name": "_value",
+          "type": "uint256"
+        }
+      ],
+      "name": "setAgain",
+      "outputs": [],
+      "payable": false,
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "constant": true,
+      "inputs": [],
+      "name": "get",
+      "outputs": [
+        {
+          "name": "",
+          "type": "uint256"
+        },
+        {
+          "name": "",
+          "type": "address"
+        }
+      ],
+      "payable": false,
+      "stateMutability": "view",
+      "type": "function"
+    }
+  ], "0x60ab575af210cc952999976854e938447e919871", { from })
+
+            contract.events.NewValueSet({}, (err, event) => {
+      
+            
+            })
+
+        });
+        
+        async function set() {
+            await contract.methods.set(10).send()
+        }
+
+        async function get() {
+            await contract.methods.get().call().then(console.log)
+        }
+
+    </script>
+
+</body>
+
+</html>
