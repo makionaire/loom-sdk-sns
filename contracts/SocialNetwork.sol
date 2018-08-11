@@ -74,7 +74,10 @@ contract SimpleSocialNetwork {
         totalSupply = _initialSupply;
 
     }
-
+    
+    function getPostNum() public view returns (uint) {
+        return (jobs.length - 1); 
+    }
     function hasJobs() public view returns(bool _hasJobs) {
         _hasJobs = jobs.length > 0;
     }
