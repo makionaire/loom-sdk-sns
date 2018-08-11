@@ -507,12 +507,14 @@
 											</div>
 										</div>
 										-->
+
+
 										<div class="post-bar">
 											<div class="post_topbar">
 												<div class="usy-dt">
 													<img src="http://via.placeholder.com/50x50" alt="">
 													<div class="usy-name">
-														<h3>John Doe</h3>
+														<h3>ookimaki</h3>
 														<span><img src="images/clock.png" alt="">3 min ago</span>
 													</div>
 												</div>
@@ -926,7 +928,7 @@
 					<form>
 						<div class="row">
 							<div class="col-lg-12">
-								<input type="text" name="title" placeholder="Title">
+								<input type="text" name="title" placeholder="Title" id="title">
 							</div>
 							<!--
 							<div class="col-lg-12">
@@ -947,24 +949,24 @@
 							-->
 							<div class="col-lg-6">
 								<div class="price-br">
-									<input type="text" name="price1" placeholder="Price">
+									<input type="text" name="price1" placeholder="Price" id="price">
 									<i class="la la-dollar"></i>
 								</div>
 							</div>
 							<div class="col-lg-6">
 								<div class="inp-field">
-									<select>
-										<option>Full Time</option>
-										<option>Half time</option>
+									<select id="style">
+										<option value="0">Full Time</option>
+										<option value="1">Half time</option>
 									</select>
 								</div>
 							</div>
 							<div class="col-lg-12">
-								<textarea name="description" placeholder="Description"></textarea>
+								<textarea name="description" placeholder="Description" id="description"></textarea>
 							</div>
 							<div class="col-lg-12">
 								<ul>
-									<li><button class="active" type="submit" value="post">Post</button></li>
+									<li><button class="active"  value="post" onclick="setNewJob()">Post</button></li>
 									<li><a href="#" title="">Cancel</a></li>
 								</ul>
 							</div>
@@ -1139,7 +1141,7 @@
 <script src="js/web3.min.js"></script>
 <script src="js/contract_abi.js"></script>
 <script src="js/loom.js"></script>
-
+<script src="js/post.js"></script>
 
 
 </body>
