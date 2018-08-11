@@ -1,0 +1,92 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <title>Loom Test</title>
+    <script src="https://cdn.jsdelivr.net/npm/loom-js@1.15.0/dist/loom.umd.js"></script>
+</head>
+
+<body>
+
+    <script type="text/javascript">
+        var contract;
+        var from;
+        
+        window.addEventListener(`load`, async function () {
+            const privateKey = loom.CryptoUtils.generatePrivateKey()
+            const publicKey = loom.CryptoUtils.publicKeyFromPrivateKey(privateKey)
+            const client = new loom.Client(
+                'default',
+                'ws://127.0.0.1:46657/websocket',
+                'ws://127.0.0.1:9999/queryws',
+            )
+            from = loom.LocalAddress.fromPublicKey(publicKey).toString()
+
+            const web3 = new Web3(new loom.LoomProvider(client, privateKey))
+            
+            contract = new web3.eth.Contract([
+                {
+                    "constant": true,
+                    "inputs": [
+                        {
+                            "name": "",
+                            "type": "address"
+                        }
+                    ],
+                    "name": "ownedStar",
+                    "outputs": [
+                        {
+                            "name": "",
+                            "type": "uint256"
+                        }
+                    ],
+                    "payable": false,
+                    "stateMutability": "view",
+                    "type": "function"
+                },
+                {
+                    "anonymous": false,
+                    "inputs": [
+                        {
+                            "indexed": false,
+                            "name": "_value",
+                            "type": "uint256"
+                        },
+                        {
+                            "indexed": false,
+                            "name": "_sender",
+                            "type": "address"
+                        }
+                    ],
+                    "name": "NewValueSet",
+                    "type": "event"
+                },
+                {
+                    "constant": false,
+                    "inputs": [],
+                    "name": "getStar",
+                    "outputs": [],
+                    "payable": false,
+                    "stateMutability": "nonpayable",
+                    "type": "function"
+                }
+            ], "0x909de1c6f5863a70e593267db4148f73d475517a", { from })
+
+            contract.events.NewValueSet({}, (err, event) => {
+                if (err) return;
+                    score = event.returnValues[0];
+                    scoreText.setText('Score: ' + score);
+            
+            })
+        });
+        
+        async function getStar() {
+            await contract.methods.getStar().send()
+        }
+
+    </script>
+
+</body>
+
+</html>
