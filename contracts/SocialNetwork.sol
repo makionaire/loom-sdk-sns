@@ -26,7 +26,7 @@ contract SimpleSocialNetwork {
     mapping (uint => uint[]) public commentsFromComment;
     mapping (uint => address) public commentFromAccount; 
     mapping (uint => address[]) public likesFromAccount;
-    mapping (address => uint[]) public addressToLike;
+    mapping (address => mapping (uint => bool)) public addressToLike;
     mapping (address => uint) public profileMap;
 
     Job[] public jobs;
@@ -58,8 +58,8 @@ contract SimpleSocialNetwork {
         Job memory job = Job(_title, _price, _style, _desc, 0);
         uint jobId = jobs.push(job) -1 ;
         jobsFromAccount[msg.sender].push(jobId);
+        
         emit NewPostAdded(jobId, 0, msg.sender);
-
     }
 
     function newCommentToJob(uint _jobId, string _text) public {
@@ -79,10 +79,10 @@ contract SimpleSocialNetwork {
     }
 
     function likeToJob(uint _jobId) public {
-        require(addressToLike[msg.sender][_jobId] == 0);
+        require (!addressToLike[msg.sender][_jobId]);
         likesFromAccount[_jobId].push(msg.sender);
         jobs[_jobId].likeCount = jobs[_jobId].likeCount + 1;
-        addressToLike[msg.sender][_jobId] = 1;
+        addressToLike[msg.sender][_jobId] = true;
         emit NewLike(_jobId, msg.sender);
     }
 }
