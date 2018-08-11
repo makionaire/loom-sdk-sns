@@ -111,9 +111,13 @@ contract SimpleSocialNetwork {
 
     function likeToJob(uint _jobId) public {
         require (!addressToLike[msg.sender][_jobId]);
+        require(1 <= balances[msg.sender]);
         likesFromAccount[_jobId].push(msg.sender);
         jobs[_jobId].likeCount = jobs[_jobId].likeCount + 1;
         addressToLike[msg.sender][_jobId] = true;
+        balances[msg.sender] -= 1;
+        balances[jobToAddress[_jobId]] += 1;
+        emit Transfer(msg.sender, jobToAddress[_jobId], 1);
         emit NewLike(_jobId, msg.sender);
     }
     
