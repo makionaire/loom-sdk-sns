@@ -17,8 +17,19 @@ contract SimpleSocialNetwork {
     }
     
 
+    string public name = 'Trust workers';
+    string public symbol = 'TTW';
+    uint public decimals = 18;
+    uint public totalSupply;
+    
+    uint private initialSupply = 1000;
+    
+    mapping(address => uint) public balances;
+    mapping(address => mapping (address => uint)) internal allowed;
+
     
     mapping (address => uint[]) public jobsFromAccount;
+    mapping (uint => address) public jobToAddress;
     mapping (uint => uint[]) public commentsFromJob;
     mapping (uint => uint[]) public commentsFromComment;
     mapping (uint => address) public commentFromAccount; 
@@ -46,6 +57,9 @@ contract SimpleSocialNetwork {
     event NewLike(uint jobId, address owner);
     event NewProfile(uint profileId, address owner);
     event NewFollow(uint profileId, address owner);
+    
+    event Transfer(address indexed from, address indexed to, uint value);
+
 
     constructor () public {
         // created the first post and comment with ID
@@ -53,6 +67,12 @@ contract SimpleSocialNetwork {
         newJob("",0,0,"");
         newCommentToJob(0, "");
         createProfile("","");
+        
+        uint _initialSupply = 10000;
+
+        balances[msg.sender] = _initialSupply;
+        totalSupply = _initialSupply;
+
     }
 
     function hasJobs() public view returns(bool _hasJobs) {
@@ -69,7 +89,7 @@ contract SimpleSocialNetwork {
         Job memory job = Job(_title, _price, _style, _desc, 0);
         uint jobId = jobs.push(job) -1 ;
         jobsFromAccount[msg.sender].push(jobId);
-        
+        jobToAddress[jobId] = msg.sender;
         emit NewPostAdded(jobId, 0, msg.sender);
     }
 
@@ -104,6 +124,9 @@ contract SimpleSocialNetwork {
         profile.push(newProfile);
         profileMap[msg.sender] = profileId;
         profileToAddress[profileId] = msg.sender;
+        balances[msg.sender] = initialSupply;
+        totalSupply = totalSupply + initialSupply;
+        
         emit NewProfile(profileId, msg.sender);
     }
     
@@ -116,4 +139,51 @@ contract SimpleSocialNetwork {
         addressToFollow[msg.sender][_profileId] = true;
         emit NewFollow(_profileId, msg.sender);
     }
+    
+    
+    function totalSupply() public view returns (uint) {
+        return (totalSupply);
+    }
+    
+    function balanceOf(address _owner) public view returns (uint) {
+        return (balances[_owner]);
+    }
+    
+    function transfer(address _to, uint256 _value) public returns (bool) {
+        require(_value <= balances[msg.sender]);
+
+        balances[msg.sender] -= _value;
+        balances[_to] += _value;
+
+        emit Transfer(msg.sender, _to, _value);
+        return true;
+    }
+    
+    function transferFrom(address _from, address _to, uint _value) public returns (bool) {
+        require(_value <= balances[_from]);
+        require(_value <= allowed[_from][msg.sender]);
+
+        balances[_from] -= _value;
+        balances[_to] += _value;
+        allowed[_from][msg.sender] -= _value;
+
+        emit Transfer(_from, _to, _value);
+        return true;
+    }
+    
+    function approve(address _spender, uint _value) public returns (bool) {
+        allowed[msg.sender][_spender] = _value;
+
+        emit Approval(msg.sender, _spender, _value);
+        return true;
+    }
+    
+    function allowance(address _owner, address _spender) public view returns (uint) {
+        return allowed[_owner][_spender];
+    }
+
+    event Approval(address indexed owner, address indexed spender, uint value);
+     
+     
+
 }
