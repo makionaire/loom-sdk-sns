@@ -15,5 +15,5 @@ window.addEventListener(`load`, async function () {
         from = loom.LocalAddress.fromPublicKey(publicKey).toString()
 
         const web3 = new Web3(new loom.LoomProvider(client, privateKey))
-        contract = new web3.eth.Contract(contractABI, "0x9ed8380b47feef8945251ded45f0ba4f1b72f522", { from })
+        contract = new web3.eth.Contract(contractABI, "0xea59a949651ffc6d3e039db2d89f4e047301718d", { from })
 });
