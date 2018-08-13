@@ -364,7 +364,7 @@
 								<div class="main-ws-sec">
 									<div class="post-topbar">
 										<div class="user-picy">
-											<img src="http://via.placeholder.com/100x100" alt="">
+											<img src="images/tanaka3.jpg" alt="">
 										</div>
 										<div class="post-st">
 											<ul>
@@ -1160,14 +1160,12 @@
 	        console.log(_val);
 	        num = _val;
 		});
-		
 	   
 		await contract.methods.jobs(num).call().then(function(_val){
 	        title = _val.title;
 	        price = _val.price;
 	        desc =  _val.desc;
 		});
-		
 		
 	    document.getElementById("field").innerHTML = `
 	<div class="post-bar">
@@ -1227,9 +1225,9 @@
 												<a><i class="la la-eye"></i>Views 50</a>
 											</div>
 										</div>
-	    `
+	   
+									 `
 	});
-	
 	
 	</script>
 	
